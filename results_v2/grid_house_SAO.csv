@@ -1,0 +1,2 @@
+map_id,obs_density,manhattan_dist,nodes,edges,conn_comp,edge_len,algo,params,fitness,turns,time,composite
+grid_house,0.5943396226415094,66,1161,2145,1,274,SAO,"{""np_size"": 87, ""max_iter"": 883}",66.0,2,61.675897100009024,662061.6758971
