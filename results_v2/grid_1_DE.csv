@@ -1,2 +1,0 @@
-map_id,obs_density,manhattan_dist,nodes,edges,conn_comp,edge_len,algo,params,fitness,turns,time,composite
-grid_1,0.20750000000000002,38,317,520,1,186,DE,"{""np_size"": 87, ""max_iter"": 883, ""F"": 0.5262472407463396}",38.0,2,20.98441180001828,382020.98441180005

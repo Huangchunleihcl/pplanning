@@ -1,119 +1,148 @@
-import joblib
-import pandas as pd
 import json
-from pathlib import Path
+import pandas as pd
+import joblib
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from main import ShortestPathApp
-from AGV_maps import short_folder
-from BayesOpt import extract_map_features
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
+import warnings
+from datapre import MapDataPreprocessor
+
+warnings.filterwarnings('ignore')
 
 class AlgorithmRecommender:
-    def __init__(self, historical_data_path="historical_results"):
+    def __init__(self, data_path='optimal_algorithms.csv'):
         """
-        :param historical_data_path: 历史结果存储目录
+        初始化推荐系统
+        :param data_path: 标签数据文件路径
         """
-        self.historical_data = self._load_historical_data(historical_data_path)
+        self.data_path = data_path
         self.model = None
-        self.algorithm_best_params = {}
+        self.scaler = StandardScaler()
         self.feature_columns = [
-            'obs_density', 'manhattan_dist', 'nodes',
-            'edges', 'conn_comp', 'edge_len'
+            'obs_density', 
+            'manhattan_dist',
+            'nodes',
+            'edges',
+            'conn_comp',
+            'edge_len'
         ]
-        
-    def _load_historical_data(self, path):
-        """加载并预处理历史数据"""
-        all_files = list(Path(path).glob("*.csv"))
-        df = pd.concat([pd.read_csv(f) for f in all_files])
-        
-        # 为每个地图保留最优记录
-        best_indices = df.groupby(['map_id'])['composite'].idxmin()
-        return df.loc[best_indices].reset_index(drop=True)
+        self.param_db = None
+        self.label_encoder = None
 
-    def train_model(self):
-        """训练单级推荐模型"""
-        # 准备训练数据
-        X = self.historical_data[self.feature_columns]
-        y = self.historical_data['algo']
+    def load_data(self, test_size=0.3, random_state=42):
+        """
+        加载并预处理数据
+        :param test_size: 测试集比例
+        :return: 训练集和测试集元组 (X_train, X_test, y_train, y_test)
+        """
+        df = pd.read_csv(self.data_path)
+        self.param_db = df.groupby('algorithm')['params'].agg(lambda x: x.mode()[0]).to_dict() # 构建参数数据库
         
-        # 训练分类模型
-        self.model = RandomForestClassifier(n_estimators=100, random_state=42)
-        self.model.fit(X, y)
+        # 特征标准化
+        X = df[self.feature_columns]
+        y = df['algorithm']
+        X = self.scaler.fit_transform(X)
         
-        # 提取各算法全局最优参数
-        for algo in self.historical_data['algo'].unique():
-            algo_data = self.historical_data[self.historical_data['algo'] == algo]
-            best_idx = algo_data['composite'].idxmin()
-            self.algorithm_best_params[algo] = json.loads(
-                algo_data.loc[best_idx, 'params']
-            )
-        
-        # 保存模型
-        joblib.dump((self.model, self.algorithm_best_params), 
-                   'recommender_model.pkl')
+        # 划分数据集
+        return train_test_split(X, y, test_size=test_size, random_state=random_state)
 
-    def recommend(self, map_data, start, goal):
-        """推荐最优算法及参数"""
-        features = extract_map_features(map_data, start, goal)
-        features_df = pd.DataFrame([features[self.feature_columns]])
+    def train(self, n_estimators=100, max_depth=None, verbose=True):
+        """
+        训练推荐模型
+        :param n_estimators: 随机森林树数量
+        :param max_depth: 最大树深度
+        :param verbose: 是否显示训练信息
+        :return: 训练好的模型
+        """
+        X_train, X_test, y_train, y_test = self.load_data() # 数据准备
         
-        # 预测最优算法
-        algo = self.model.predict(features_df)[0]
-        
-        return {
-            'algorithm': algo,
-            'parameters': self.algorithm_best_params.get(algo, {}),
-            'features': features
-        }
-
-    def execute_recommendation(self, recommendation, map_data):
-        """执行推荐配置"""
-        app = ShortestPathApp(
-            map_data,
-            recommendation['features']['start'],
-            recommendation['features']['goal'],
-            algo_chosen=[recommendation['algorithm']],
-            **recommendation['parameters']
+        # 初始化模型
+        self.model = RandomForestClassifier(
+            n_estimators=n_estimators,
+            max_depth=max_depth,
+            class_weight='balanced',
+            random_state=42
         )
         
-        results = app.optimize()
-        return {
-            'path': results['route'],
-            'length': results['gbest_f'],
-            'turns': results['truns'],
-            'time': results['time']
-        }
+        self.model.fit(X_train, y_train) # 训练模型
+        
+        # 评估模型
+        if verbose:
+            self.evaluate(X_test, y_test)
+        
+        return self.model
 
-# 使用示例
+    def evaluate(self, X_test, y_test):
+        """ 模型性能评估 """
+        y_pred = self.model.predict(X_test)
+        accuracy = accuracy_score(y_test, y_pred)
+        print(f"模型评估结果：")
+        print(f"- 准确率: {accuracy:.2%}")
+        print(f"- 特征重要性：")
+        for feat, imp in zip(self.feature_columns, self.model.feature_importances_):
+            print(f"  {feat}: {imp:.2%}")
+
+    def save_model(self, model_path='algo_recommender.pkl'):
+        """ 保存完整推荐系统 """
+        joblib.dump({
+            'model': self.model,
+            'scaler': self.scaler,
+            'param_db': self.param_db
+        }, model_path)
+        print(f"模型已保存至 {model_path}")
+
+    @classmethod
+    def load_model(cls, model_path='algo_recommender.pkl'):
+        """ 加载预训练模型 """
+        system = cls()
+        data = joblib.load(model_path)
+        system.model = data['model']
+        system.scaler = data['scaler']
+        system.param_db = data['param_db']
+        return system
+
+    def recommend(self, new_data, return_params=True):
+        """
+        为新地图数据推荐最佳算法
+        :param new_data: 字典格式的特征数据
+        :param return_params: 是否返回推荐参数
+        :return: 推荐结果字典
+        """
+        features = pd.DataFrame([new_data])[self.feature_columns] # 转换为DataFrame
+        scaled_features = self.scaler.transform(features) # 特征标准化
+        
+        algo = self.model.predict(scaled_features)[0] # 预测算法
+        
+        # 获取参数
+        result = {'algorithm': algo}
+        if return_params:
+            result['params'] = json.loads(self.param_db[algo])
+        
+        return result
+
+
+
 if __name__ == "__main__":
-    # 初始化推荐系统
-    recommender = AlgorithmRecommender("historical_results")
+    # 训练并保存模型
+    data_path = "Data/test/Tables/optimal_tables.csv"
+    recommender = AlgorithmRecommender(data_path=data_path)
+    recommender.train(n_estimators=150)
+    recommender.save_model()
+
+    # 加载预训练模型
+    loaded_recommender = AlgorithmRecommender.load_model()
+
     
-    # 训练模型（首次需要运行）
-    if not Path("recommender_model.pkl").exists():
-        recommender.train_model()
-    else:
-        model, params = joblib.load("recommender_model.pkl")
-        recommender.model = model
-        recommender.algorithm_best_params = params
-    
-    # 新地图数据
-    new_map = short_folder("new_map.map")
-    
-    # 生成推荐
-    recommendation = recommender.recommend(
-        new_map['maps'],
-        new_map['start'],
-        new_map['goal']
-    )
-    
-    # 执行推荐配置
-    results = recommender.execute_recommendation(recommendation, new_map)
-    
-    print("推荐配置：")
-    print(f"算法：{recommendation['algorithm']}")
-    print(f"参数：{json.dumps(recommendation['parameters'], indent=2)}")
-    
-    print("\n执行结果：")
-    print(f"路径长度：{results['length']:.2f}")
-    print(f"转弯次数：{results['turns']}")
-    print(f"计算时间：{results['time']:.2f}s")
+    # 新数据地图特征提取
+    open_dir = 'Data/test'
+    preprocessor = MapDataPreprocessor(open_dir)
+    features = preprocessor.extract_features()
+    new_map_data = list(features.values())[0]
+
+    # 新数据预测
+    recommendation = loaded_recommender.recommend(new_map_data)
+    print("\n推荐结果：")
+    print(f"最佳算法：{recommendation['algorithm']}")
+    print("推荐参数：")
+    print(json.dumps(recommendation['params'], indent=2))

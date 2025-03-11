@@ -1,0 +1,474 @@
+{
+    "0_grid_0": {
+        "obs_density": 0.2925,
+        "manhattan_dist": 38,
+        "nodes": 283,
+        "edges": 404,
+        "conn_comp": 1,
+        "edge_len": 236
+    },
+    "0_grid_1": {
+        "obs_density": 0.2075,
+        "manhattan_dist": 38,
+        "nodes": 317,
+        "edges": 520,
+        "conn_comp": 1,
+        "edge_len": 186
+    },
+    "0_grid_2": {
+        "obs_density": 0.1875,
+        "manhattan_dist": 78,
+        "nodes": 1300,
+        "edges": 2237,
+        "conn_comp": 1,
+        "edge_len": 627
+    },
+    "ca_cavern1_haunted": {
+        "obs_density": 0.8856,
+        "manhattan_dist": 679,
+        "nodes": 22127,
+        "edges": 41456,
+        "conn_comp": 1,
+        "edge_len": 4188
+    },
+    "ca_caverns1": {
+        "obs_density": 0.8853,
+        "manhattan_dist": 680,
+        "nodes": 22156,
+        "edges": 41535,
+        "conn_comp": 1,
+        "edge_len": 4144
+    },
+    "ca_caverns1_mines": {
+        "obs_density": 0.8857,
+        "manhattan_dist": 679,
+        "nodes": 22105,
+        "edges": 41423,
+        "conn_comp": 1,
+        "edge_len": 4178
+    },
+    "ca_caverns2": {
+        "obs_density": 0.9125,
+        "manhattan_dist": 563,
+        "nodes": 15897,
+        "edges": 29667,
+        "conn_comp": 1,
+        "edge_len": 3226
+    },
+    "ca_caverns2prc": {
+        "obs_density": 0.9163,
+        "manhattan_dist": 597,
+        "nodes": 15206,
+        "edges": 28675,
+        "conn_comp": 1,
+        "edge_len": 2647
+    },
+    "dr_dungeon": {
+        "obs_density": 0.7583,
+        "manhattan_dist": 456,
+        "nodes": 19812,
+        "edges": 37967,
+        "conn_comp": 1,
+        "edge_len": 2708
+    },
+    "dr_primevalentrance": {
+        "obs_density": 0.8873,
+        "manhattan_dist": 408,
+        "nodes": 7843,
+        "edges": 14966,
+        "conn_comp": 1,
+        "edge_len": 1129
+    },
+    "dr_primevaltomb": {
+        "obs_density": 0.9527,
+        "manhattan_dist": 782,
+        "nodes": 22458,
+        "edges": 42877,
+        "conn_comp": 1,
+        "edge_len": 3200
+    },
+    "dr_slavers": {
+        "obs_density": 0.753,
+        "manhattan_dist": 458,
+        "nodes": 20231,
+        "edges": 38898,
+        "conn_comp": 1,
+        "edge_len": 2568
+    },
+    "ht_0_hightown": {
+        "obs_density": 0.8288,
+        "manhattan_dist": 514,
+        "nodes": 45236,
+        "edges": 87888,
+        "conn_comp": 1,
+        "edge_len": 4475
+    },
+    "ht_0_hightown_a2": {
+        "obs_density": 0.8285,
+        "manhattan_dist": 514,
+        "nodes": 45299,
+        "edges": 87961,
+        "conn_comp": 1,
+        "edge_len": 4558
+    },
+    "ht_0_hightown_a3": {
+        "obs_density": 0.8282,
+        "manhattan_dist": 514,
+        "nodes": 45386,
+        "edges": 88129,
+        "conn_comp": 1,
+        "edge_len": 4566
+    },
+    "ht_0_hightown_n": {
+        "obs_density": 0.8281,
+        "manhattan_dist": 514,
+        "nodes": 45417,
+        "edges": 88222,
+        "conn_comp": 1,
+        "edge_len": 4523
+    },
+    "ht_bartrand_n": {
+        "obs_density": 0.706,
+        "manhattan_dist": 181,
+        "nodes": 10559,
+        "edges": 20021,
+        "conn_comp": 1,
+        "edge_len": 1582
+    },
+    "ht_brothel_n": {
+        "obs_density": 0.7565,
+        "manhattan_dist": 145,
+        "nodes": 8743,
+        "edges": 16486,
+        "conn_comp": 1,
+        "edge_len": 1495
+    },
+    "ht_chantry": {
+        "obs_density": 0.602,
+        "manhattan_dist": 136,
+        "nodes": 9092,
+        "edges": 17353,
+        "conn_comp": 1,
+        "edge_len": 1395
+    },
+    "ht_chantry_n": {
+        "obs_density": 0.6074,
+        "manhattan_dist": 136,
+        "nodes": 8967,
+        "edges": 17101,
+        "conn_comp": 1,
+        "edge_len": 1404
+    },
+    "ht_keep": {
+        "obs_density": 0.8371,
+        "manhattan_dist": 210,
+        "nodes": 16339,
+        "edges": 31334,
+        "conn_comp": 1,
+        "edge_len": 2236
+    },
+    "ht_keep_n": {
+        "obs_density": 0.8372,
+        "manhattan_dist": 210,
+        "nodes": 16335,
+        "edges": 31327,
+        "conn_comp": 1,
+        "edge_len": 2234
+    },
+    "ht_mansion2": {
+        "obs_density": 0.8039,
+        "manhattan_dist": 379,
+        "nodes": 21626,
+        "edges": 40973,
+        "conn_comp": 1,
+        "edge_len": 3805
+    },
+    "ht_mansion2b": {
+        "obs_density": 0.7868,
+        "manhattan_dist": 378,
+        "nodes": 23507,
+        "edges": 44706,
+        "conn_comp": 1,
+        "edge_len": 3869
+    },
+    "ht_mansion_n": {
+        "obs_density": 0.6964,
+        "manhattan_dist": 185,
+        "nodes": 10901,
+        "edges": 20700,
+        "conn_comp": 1,
+        "edge_len": 1683
+    },
+    "ht_playershouse_n": {
+        "obs_density": 0.7045,
+        "manhattan_dist": 103,
+        "nodes": 3717,
+        "edges": 7031,
+        "conn_comp": 1,
+        "edge_len": 656
+    },
+    "ht_store": {
+        "obs_density": 0.5566,
+        "manhattan_dist": 36,
+        "nodes": 607,
+        "edges": 1146,
+        "conn_comp": 1,
+        "edge_len": 108
+    },
+    "lt_0_lowtown": {
+        "obs_density": 0.8902,
+        "manhattan_dist": 367,
+        "nodes": 29017,
+        "edges": 55821,
+        "conn_comp": 1,
+        "edge_len": 3432
+    },
+    "lt_0_lowtown_a2": {
+        "obs_density": 0.8901,
+        "manhattan_dist": 367,
+        "nodes": 29033,
+        "edges": 55863,
+        "conn_comp": 1,
+        "edge_len": 3412
+    },
+    "lt_0_lowtown_a2_n": {
+        "obs_density": 0.889,
+        "manhattan_dist": 367,
+        "nodes": 29334,
+        "edges": 56387,
+        "conn_comp": 1,
+        "edge_len": 3524
+    },
+    "lt_0_lowtown_a2_n_c": {
+        "obs_density": 0.8665,
+        "manhattan_dist": 415,
+        "nodes": 35277,
+        "edges": 68082,
+        "conn_comp": 1,
+        "edge_len": 3899
+    },
+    "lt_0_lowtown_a3_n_c": {
+        "obs_density": 0.8666,
+        "manhattan_dist": 415,
+        "nodes": 35232,
+        "edges": 67980,
+        "conn_comp": 1,
+        "edge_len": 3902
+    },
+    "lt_0_lowtown_docks": {
+        "obs_density": 0.8768,
+        "manhattan_dist": 311,
+        "nodes": 24447,
+        "edges": 47081,
+        "conn_comp": 1,
+        "edge_len": 2808
+    },
+    "lt_0_lowtown_docks_a3": {
+        "obs_density": 0.8923,
+        "manhattan_dist": 304,
+        "nodes": 21362,
+        "edges": 41205,
+        "conn_comp": 1,
+        "edge_len": 2412
+    },
+    "lt_0_lowtown_docks_a3_n": {
+        "obs_density": 0.8923,
+        "manhattan_dist": 304,
+        "nodes": 21362,
+        "edges": 41205,
+        "conn_comp": 1,
+        "edge_len": 2412
+    },
+    "lt_0_lowtown_docks_n": {
+        "obs_density": 0.8768,
+        "manhattan_dist": 311,
+        "nodes": 24447,
+        "edges": 47081,
+        "conn_comp": 1,
+        "edge_len": 2808
+    },
+    "lt_0_lowtown_n": {
+        "obs_density": 0.8902,
+        "manhattan_dist": 367,
+        "nodes": 28996,
+        "edges": 55798,
+        "conn_comp": 1,
+        "edge_len": 3412
+    },
+    "lt_backalley_g": {
+        "obs_density": 0.5257,
+        "manhattan_dist": 162,
+        "nodes": 8016,
+        "edges": 15418,
+        "conn_comp": 1,
+        "edge_len": 1001
+    },
+    "lt_backalley_n": {
+        "obs_density": 0.5257,
+        "manhattan_dist": 162,
+        "nodes": 8016,
+        "edges": 15418,
+        "conn_comp": 1,
+        "edge_len": 1001
+    },
+    "lt_darktown": {
+        "obs_density": 0.8146,
+        "manhattan_dist": 278,
+        "nodes": 13587,
+        "edges": 25846,
+        "conn_comp": 1,
+        "edge_len": 2173
+    },
+    "lt_foundry_n": {
+        "obs_density": 0.4454,
+        "manhattan_dist": 136,
+        "nodes": 5562,
+        "edges": 10524,
+        "conn_comp": 1,
+        "edge_len": 996
+    },
+    "lt_gallowscourtyard": {
+        "obs_density": 0.9383,
+        "manhattan_dist": 418,
+        "nodes": 20353,
+        "edges": 39384,
+        "conn_comp": 1,
+        "edge_len": 2238
+    },
+    "lt_gallowscourtyard_n": {
+        "obs_density": 0.9652,
+        "manhattan_dist": 214,
+        "nodes": 11499,
+        "edges": 22328,
+        "conn_comp": 1,
+        "edge_len": 1158
+    },
+    "lt_gallowsprison_n": {
+        "obs_density": 0.8746,
+        "manhattan_dist": 165,
+        "nodes": 3519,
+        "edges": 6737,
+        "conn_comp": 7,
+        "edge_len": 495
+    },
+    "lt_gallowstemplar": {
+        "obs_density": 0.7367,
+        "manhattan_dist": 144,
+        "nodes": 11894,
+        "edges": 22772,
+        "conn_comp": 1,
+        "edge_len": 1732
+    },
+    "lt_gallowstemplar_f": {
+        "obs_density": 0.727,
+        "manhattan_dist": 145,
+        "nodes": 12332,
+        "edges": 23539,
+        "conn_comp": 1,
+        "edge_len": 1846
+    },
+    "lt_gallowstemplar_n": {
+        "obs_density": 0.7369,
+        "manhattan_dist": 144,
+        "nodes": 11888,
+        "edges": 22759,
+        "conn_comp": 1,
+        "edge_len": 1735
+    },
+    "lt_gamlenshouse_n": {
+        "obs_density": 0.9199,
+        "manhattan_dist": 79,
+        "nodes": 1275,
+        "edges": 2404,
+        "conn_comp": 1,
+        "edge_len": 222
+    },
+    "lt_hangedman": {
+        "obs_density": 0.6608,
+        "manhattan_dist": 212,
+        "nodes": 5907,
+        "edges": 11034,
+        "conn_comp": 1,
+        "edge_len": 1183
+    },
+    "lt_hangedman_n": {
+        "obs_density": 0.6608,
+        "manhattan_dist": 212,
+        "nodes": 5907,
+        "edges": 11034,
+        "conn_comp": 1,
+        "edge_len": 1183
+    },
+    "lt_house": {
+        "obs_density": 0.5943,
+        "manhattan_dist": 66,
+        "nodes": 1161,
+        "edges": 2145,
+        "conn_comp": 1,
+        "edge_len": 274
+    },
+    "lt_ruinedhouse_n": {
+        "obs_density": 0.9253,
+        "manhattan_dist": 88,
+        "nodes": 1189,
+        "edges": 2235,
+        "conn_comp": 1,
+        "edge_len": 216
+    },
+    "lt_shop": {
+        "obs_density": 0.9361,
+        "manhattan_dist": 70,
+        "nodes": 1017,
+        "edges": 1886,
+        "conn_comp": 1,
+        "edge_len": 213
+    },
+    "lt_undercitydungeon": {
+        "obs_density": 0.6766,
+        "manhattan_dist": 250,
+        "nodes": 10534,
+        "edges": 20190,
+        "conn_comp": 1,
+        "edge_len": 1464
+    },
+    "lt_undercityencounter": {
+        "obs_density": 0.7038,
+        "manhattan_dist": 243,
+        "nodes": 10729,
+        "edges": 20571,
+        "conn_comp": 1,
+        "edge_len": 1568
+    },
+    "lt_undercityserialkiller": {
+        "obs_density": 0.666,
+        "manhattan_dist": 250,
+        "nodes": 10878,
+        "edges": 20801,
+        "conn_comp": 1,
+        "edge_len": 1561
+    },
+    "lt_warehouse_n": {
+        "obs_density": 0.7389,
+        "manhattan_dist": 161,
+        "nodes": 6585,
+        "edges": 12498,
+        "conn_comp": 1,
+        "edge_len": 1102
+    },
+    "w_encounter2_camp": {
+        "obs_density": 0.9031,
+        "manhattan_dist": 399,
+        "nodes": 25593,
+        "edges": 49605,
+        "conn_comp": 1,
+        "edge_len": 2280
+    },
+    "w_encounter3": {
+        "obs_density": 0.9743,
+        "manhattan_dist": 363,
+        "nodes": 6365,
+        "edges": 11900,
+        "conn_comp": 1,
+        "edge_len": 1200
+    }
+}

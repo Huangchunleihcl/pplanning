@@ -4,28 +4,50 @@ from fealpy.backend import backend_manager as bm
 from fealpy.opt import *
 from fealpy.opt.optimizer_base import opt_alg_options
 # from AGV_maps import MAP_data as MAPdata
-from AGVs_maps import AGV_data as AGVdata
-from CVRP_maps import CVRP_data as CVRPdata
-from TSP_citys import TSProblem
+# from AGVs_maps import AGV_data as AGVdata
+# from CVRP_maps import CVRP_data as CVRPdata
+# from TSP_citys import TSProblem
 from AGV_maps import AGVProblem
-from AGVs_maps import AGVsProblem
-from CVRP_maps import CVRProblem
-from TSP_citys import tsp_folder, print_results_tsp, printroute_tsp
-from AGV_maps import short_folder, print_results_short, printroute_short
-from AGVs_maps import print_results_ob, printroute_ob
-from CVRP_maps import print_results_cvrp, printroute_cvrp
+# from AGVs_maps import AGVsProblem
+# from CVRP_maps import CVRProblem
+# from TSP_citys import tsp_folder, print_results_tsp, printroute_tsp
+from AGV_maps import print_results_short, printroute_short
+# from AGVs_maps import print_results_ob, printroute_ob
+# from CVRP_maps import print_results_cvrp, printroute_cvrp
 
-# bm.set_backend('pytorch')
+
+bm.set_backend('pytorch')
+
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+# 优化算法映射
+optimizers = {
+    'SAO': SnowAblationOpt,
+    'COA': CrayfishOptAlg,
+    'HBA': HoneybadgerAlg,
+    'QPSO': QuantumParticleSwarmOpt,
+    'PSO': ParticleSwarmOpt,
+    'GWO': GreyWolfOpt,
+    'ACO': AntColonyOptAlg,
+    'HOA': HippopotamusOptAlg,
+    'CPO': CrestedPorcupineOpt,
+    'BKA':BlackwingedKiteAlg,
+    'BOA':ButterflyOptAlg,
+    'CSO':CuckooSearchOpt,
+    'DE':DifferentialEvolution,
+    'ETO':ExponentialTrigonometricOptAlg,
+}
+
+
 class TSPOptimizerApp:
-    def __init__(self, map_chosen = None, algo_chosen = None, NP=200, lb=0, ub=1, MaxIters = 10000):
+    def __init__(self, map_chosen = None, algo_chosen = None, lb=0, ub=1, NP=200, MaxIters = 10000):
         self.NP = NP
         self.lb = lb
         self.ub = ub
         self.MaxIters = MaxIters
+        self.optimizers = optimizers
 
         self.algo_chosen = ['SAO'] if algo_chosen is None else algo_chosen
         self.num_algo = len(self.algo_chosen)
@@ -36,23 +58,6 @@ class TSPOptimizerApp:
         self.TSPtest.calD()
         self.D = self.TSPtest.D
         self.fobj = lambda x: self.TSPtest.fitness(x)
-
-        self.optimizers = {
-            'SAO': SnowAblationOpt,
-            'COA': CrayfishOptAlg,
-            'HBA': HoneybadgerAlg,
-            'QPSO': QuantumParticleSwarmOpt,
-            'PSO': ParticleSwarmOpt,
-            'GWO': GreyWolfOpt,
-            'ACO': AntColonyOptAlg,
-            'HO': HippopotamusOptAlg,
-            'CPO': CrestedPorcupineOpt,
-            'BKA':BlackwingedKiteAlg,
-            'BOA':ButterflyOptAlg,
-            'CS':CuckooSearchOpt,
-            'DE':DifferentialEvolution,
-            'ETO':ExponentialTrigonometricOptAlg,
-        }
         self.results = {}
 
     def optimize(self):
@@ -92,57 +97,45 @@ class TSPOptimizerApp:
         # print_results_tsp(self.results)
         # printroute_tsp(self.citys, self.results)
         return self.results
-
+    
 
 class ShortestPathApp:
-    def __init__(self, maps, start = None, goal = None, algo_chosen = None, NP=130, lb=0, ub=1, MaxIters = 30):
+    def __init__(self, maps, start = None, goal = None, algo_chosen = None, lb=0, ub=1, NP=130, MaxIters = 30, **Params):
         self.NP = NP
         self.lb = lb
         self.ub = ub
         self.MaxIters = MaxIters
+        self.Params = Params
+        self.optimizers = optimizers
         self.maps = maps['maps'] # 稀疏矩阵
         self.start = maps['start'] if start is None else start
         self.goal = maps['goal'] if goal is None else goal
+        self.coords = maps['coords']
         self.algo_chosen = ['SAO'] if algo_chosen is None else algo_chosen
-
-        if self.maps[self.start[0], self.start[1]] != 1 or self.maps[self.goal[0], self.goal[1]] != 1: 
+    
+        # 检查 start、goal 是否在 coords 中
+        start_match = bm.all(self.coords == self.start, dim=1)
+        start_exists = bm.any(start_match)
+        goal_match = bm.all(self.coords == self.goal, dim=1)
+        goal_exists = bm.any(goal_match)
+        if not start_exists or not goal_exists:
             raise ValueError("Error: Invalid start or goal point")
         
-         # 初始化路径规划问题
-        self.Shorttest = AGVProblem(self.maps, self.start, self.goal)
-        self.Shorttest.calD()
-        self.D = self.Shorttest.data['D']               # 距离矩阵
+        # 初始化路径规划问题
+        self.Shorttest = AGVProblem(self.maps, self.start, self.goal, self.coords)
+        data = self.Shorttest.calD()
+        self.D = data['D']               # 距离矩阵
         self.dim = self.D.shape[0]                      # 可行点的数量
         self.fobj = lambda x: self.Shorttest.fitness(x)        
-        
-        # 优化算法映射
-        self.optimizers = {
-            'SAO': SnowAblationOpt,
-            'COA': CrayfishOptAlg,
-            'HBA': HoneybadgerAlg,
-            'QPSO': QuantumParticleSwarmOpt,
-            'PSO': ParticleSwarmOpt,
-            'GWO': GreyWolfOpt,
-            'ACO': AntColonyOptAlg,
-            'HO': HippopotamusOptAlg,
-            'CPO': CrestedPorcupineOpt,
-            'BKA':BlackwingedKiteAlg,
-            'BOA':ButterflyOptAlg,
-            'CS':CuckooSearchOpt,
-            'DE':DifferentialEvolution,
-            'ETO':ExponentialTrigonometricOptAlg,
-        }
         self.results = {}
 
     def optimize(self):
         x0 = self.lb + bm.random.rand(self.NP, self.dim) * (self.ub - self.lb)
-        option = opt_alg_options(x0, self.fobj, (self.lb, self.ub), self.NP, self.MaxIters)          
+        option = opt_alg_options(x0, self.fobj, (self.lb, self.ub), self.NP, self.MaxIters)  
         
         # 运行优化算法
         for algo_name in self.algo_chosen:
-            # logging.info(f"Running {algo_name}...")
             algo_optimizer = self.optimizers[algo_name]
-
             algo_start = time.perf_counter()
 
             # 初始化优化器
@@ -150,7 +143,10 @@ class ShortestPathApp:
                 optimizer = algo_optimizer(option, self.D)
             else:
                 optimizer = algo_optimizer(option)
-            optimizer.run()
+            if algo_name in ('PRGBO', 'TLBO', 'IWOA', 'CQPSO', 'LQBOA', 'ETOA', 'SAO', 'ARO', 'COA', 'GWO', 'HHO', 'HOA', 'JSO', 'SCSO', 'SFOA', 'WOA', 'ZOA'):
+                optimizer.run()  
+            else:
+                optimizer.run(self.Params)
             gbest = optimizer.gbest
             gbest_f = optimizer.gbest_f 
 
@@ -172,11 +168,12 @@ class ShortestPathApp:
 
 
 class ObstacleAvoidanceApp:
-    def __init__(self, map_sets = None, starts = None, goals = None, algo_chosen = None, NP=120, lb=0, ub=1, MaxIters = 50):
+    def __init__(self, map_sets = None, starts = None, goals = None, algo_chosen = None, lb=0, ub=1, NP=120, MaxIters = 50):
         self.NP = NP
         self.lb = lb
         self.ub = ub
-        self.MaxIters = MaxIters  
+        self.MaxIters = MaxIters 
+        self.optimizers = optimizers 
 
         self.map_sets = 0 if map_sets is None else map_sets
         self.maps = AGVdata[self.map_sets]['map']
@@ -192,23 +189,6 @@ class ObstacleAvoidanceApp:
         self.OAtest.calD()
         self.D = self.OAtest.data['D']
         self.fobj = lambda x: self.OAtest.fitness(x)        
-        
-        self.optimizers = {
-            'SAO': SnowAblationOpt,
-            'COA': CrayfishOptAlg,
-            'HBA': HoneybadgerAlg,
-            'QPSO': QuantumParticleSwarmOpt,
-            'PSO': ParticleSwarmOpt,
-            'GWO': GreyWolfOpt,
-            'ACO': AntColonyOptAlg,
-            'HO': HippopotamusOptAlg,
-            'CPO': CrestedPorcupineOpt,
-            'BKA':BlackwingedKiteAlg,
-            'BOA':ButterflyOptAlg,
-            'CS':CuckooSearchOpt,
-            'DE':DifferentialEvolution,
-            'ETO':ExponentialTrigonometricOptAlg,
-        }
         self.results = {}
 
     def optimize(self):
@@ -253,11 +233,12 @@ class ObstacleAvoidanceApp:
 
 
 class CVROptimizerApp:
-    def __init__(self, map_sets = None, algo_chosen = None, NP=130, lb=0, ub=1, MaxIters = 10000):
+    def __init__(self, map_sets = None, algo_chosen = None, lb=0, ub=1, NP=130, MaxIters = 10000):
         self.NP = NP
         self.lb = lb
         self.ub = ub
         self.MaxIters = MaxIters
+        self.optimizers = optimizers
 
         self.map_sets = 0 if map_sets is None else map_sets
         self.algo_chosen = ['SAO'] if algo_chosen is None else algo_chosen
@@ -272,23 +253,6 @@ class CVROptimizerApp:
         self.CVRPtest.calD()
         self.D = self.CVRPtest.D
         self.fobj = lambda x: self.CVRPtest.fitness(x)
-
-        self.optimizers = {
-            'SAO': SnowAblationOpt,
-            'COA': CrayfishOptAlg,
-            'HBA': HoneybadgerAlg,
-            'QPSO': QuantumParticleSwarmOpt,
-            'PSO': ParticleSwarmOpt,
-            'GWO': GreyWolfOpt,
-            'ACO': AntColonyOptAlg,
-            'HO': HippopotamusOptAlg,
-            'CPO': CrestedPorcupineOpt,
-            'BKA':BlackwingedKiteAlg,
-            'BOA':ButterflyOptAlg,
-            'CS':CuckooSearchOpt,
-            'DE':DifferentialEvolution,
-            'ETO':ExponentialTrigonometricOptAlg,
-        }
         self.results = {}
 
     def optimize(self):
@@ -373,15 +337,17 @@ if __name__ == "__main__":
     # Shortest Path Problem
     # '''
     logging.info('\n---------ShortestPath---------')
-    file_path = 'Data/CA_CAVEMAP/0_grid_2.map'
-    maps = short_folder(file_path)
+    from datapre import MapDataPreprocessor
+    file_path = 'Data/CA_CAVEMAP/0_grid_0.map'
+    preprocessor = MapDataPreprocessor('Data/CA_CAVEMAP')
+    maps = preprocessor.csr_matrix_dic(file_path)
     start = None
     goal = None
     short_optimizer = ShortestPathApp(algo_chosen=algo_chosen, maps=maps, start=start, goal=goal)
     results = short_optimizer.optimize()
     
     print_results_short(results)
-    printroute_short(maps['maps'], results)
+    printroute_short(maps, results)
     # '''
 
 
